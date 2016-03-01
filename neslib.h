@@ -80,6 +80,10 @@ void __fastcall__ ppu_mask(unsigned char mask);
 
 unsigned char __fastcall__ ppu_system(void);
 
+//get/set the internal ppu ctrl cache var for manual writing
+
+unsigned char __fastcall__ get_ppu_ctrl_var(void);
+void __fastcall__ set_ppu_ctrl_var(unsigned char var);
 
 
 //clear OAM buffer, all the sprites are hidden
@@ -235,10 +239,6 @@ void __fastcall__ vram_write(unsigned char *src,unsigned int size);
 void __fastcall__ vram_unrle(const unsigned char *data);
 
 
-
-//like a normal memcpy, but does not return anything
-
-void __fastcall__ memcpy(void *dst,void *src,unsigned int len);
 
 //like memset, but does not return anything
 

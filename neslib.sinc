@@ -17,7 +17,8 @@
 	.export _rand8,_rand16,_set_rand
 	.export _vram_adr,_vram_put,_vram_fill,_vram_inc,_vram_unrle
 	.export _set_vram_update,_flush_vram_update
-	.export _memcpy,_memfill,_delay
+	.export _memfill,_delay
+	.export _get_ppu_ctrl_var,_set_ppu_ctrl_var
 
 
 
@@ -321,6 +322,20 @@ _ppu_mask:
 _ppu_system:
 
 	lda <NTSC_MODE
+	rts
+
+;unsigned char __fastcall__ get_ppu_ctrl_var(void);
+
+_get_ppu_ctrl_var:
+
+	lda <PPU_CTRL_VAR
+	rts
+
+;void __fastcall__ set_ppu_ctrl_var(unsigned char var);
+
+_set_ppu_ctrl_var:
+
+	sta <PPU_CTRL_VAR
 	rts
 
 
@@ -1112,54 +1127,6 @@ _vram_inc:
 
 
 
-;void __fastcall__ memcpy(void *dst,void *src,unsigned int len);
-
-_memcpy:
-
-	sta <LEN
-	stx <LEN+1
-	jsr popax
-	sta <SRC
-	stx <SRC+1
-	jsr popax
-	sta <DST
-	stx <DST+1
-
-	ldx #0
-
-@1:
-
-	lda <LEN+1
-	beq @2
-	jsr @3
-	dec <LEN+1
-	inc <SRC+1
-	inc <DST+1
-	jmp @1
-
-@2:
-
-	ldx <LEN
-	beq @5
-
-@3:
-
-	ldy #0
-
-@4:
-
-	lda (SRC),y
-	sta (DST),y
-	iny
-	dex
-	bne @4
-
-@5:
-
-	rts
-
-
-
 ;void __fastcall__ memfill(void *dst,unsigned char value,unsigned int len);
 
 _memfill:
@@ -1256,4 +1223,4 @@ palBrightTable8:
 	.byte $30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30
 	.byte $30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30,$30
 
-	.include "famitone2.s"
+	.include "famitone2.sinc"
