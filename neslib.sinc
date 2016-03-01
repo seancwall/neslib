@@ -19,6 +19,7 @@
 	.export _set_vram_update,_flush_vram_update
 	.export _memfill,_delay
 	.export _get_ppu_ctrl_var,_set_ppu_ctrl_var
+	.export _nesclock
 
 
 
@@ -1172,6 +1173,11 @@ _memfill:
 	rts
 
 
+;unsigned char __fastcall__ nesclock(void);
+
+_nesclock:
+	lda <FRAME_CNT1
+	rts
 
 ;void __fastcall__ delay(unsigned char frames);
 

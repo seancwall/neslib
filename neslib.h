@@ -80,6 +80,10 @@ void __fastcall__ ppu_mask(unsigned char mask);
 
 unsigned char __fastcall__ ppu_system(void);
 
+// Return an 8-bit counter incremented at each vblank
+
+unsigned char __fastcall__ nesclock(void);
+
 //get/set the internal ppu ctrl cache var for manual writing
 
 unsigned char __fastcall__ get_ppu_ctrl_var(void);
