@@ -128,6 +128,10 @@ initPPU:
     bit PPU_STATUS
     bpl @2
 
+; no APU frame counter IRQs
+	lda #$40
+	sta PPU_FRAMECNT
+
 clearPalette:
 
 	lda #$3f
