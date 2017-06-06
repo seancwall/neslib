@@ -221,6 +221,15 @@ void __fastcall__ vram_write(const unsigned char *src, unsigned int size);
 // unpack RLE data to current address of vram, mostly used for nametables
 void __fastcall__ vram_unrle(const unsigned char *data);
 
+// unpack LZ4 data to this address
+void __fastcall__ vram_unlz4(const unsigned char *in, unsigned char *out,
+				const unsigned uncompressed_size);
+/*
+	Rough speeds for a full 1024 nametable:
+	- rle takes 0.5 frames
+	- uncompressed takes 1.3 frames
+	- lz4 takes 2.8 frames
+*/
 
 
 // like memset, but does not return anything
