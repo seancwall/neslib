@@ -1,14 +1,6 @@
 ; Startup code for cc65 and Shiru's NES library
 ; based on code by Groepaz/Hitmen <groepaz@gmx.net>, Ullrich von Bassewitz <uz@cc65.org>
-
-
-FT_DPCM_OFF			= $c000		;$c000..$ffc0, 64-byte steps
-FT_SFX_STREAMS			= 4		;number of sound effects played at once, 1..4
-
-.define FT_DPCM_ENABLE  0			;undefine to exclude all DMC code
-.define FT_SFX_ENABLE   1			;undefine to exclude all sound effects code
-
-
+; edited by Steven Hugg (remove integrated Famitone2 library, add NMICallback)
 
 	.export _exit,__STARTUP__:absolute=1
 	.import initlib,push0,popa,popax,_main,zerobss,copydata
@@ -22,7 +14,6 @@ FT_SFX_STREAMS			= 4		;number of sound effects played at once, 1..4
 	.import NES_MAPPER,NES_PRG_BANKS,NES_CHR_BANKS,NES_MIRRORING
 
 	.include "zeropage.inc"
-
 
 
 FT_BASE_ADR		=$0100	;page in RAM, should be $xx00
@@ -73,7 +64,9 @@ PPU_CTRL_VAR:		.res 1
 PPU_CTRL_VAR1:		.res 1
 PPU_MASK_VAR: 		.res 1
 RAND_SEED: 		.res 2
-FT_TEMP: 		.res 3
+;;FT_TEMP: 		.res 3
+_oam_off:		.res 1
+NMICallback:		.res 3
 
 TEMP: 			.res 11
 
@@ -91,7 +84,6 @@ RLE_LOW			=TEMP
 RLE_HIGH		=TEMP+1
 RLE_TAG			=TEMP+2
 RLE_BYTE		=TEMP+3
-
 
 
 .segment "HEADER"
@@ -188,6 +180,14 @@ clearRAM:
 
 	jsr	initlib
 
+; setup NMICallback trampoline to NOP
+	lda #$4C	;JMP xxxx
+	sta NMICallback
+	lda #<HandyRTS
+	sta NMICallback+1
+	lda #>HandyRTS
+	sta NMICallback+2
+
 	lda #%10000000
 	sta <PPU_CTRL_VAR
 	sta PPU_CTRL		;enable NMI
@@ -215,17 +215,6 @@ detectNTSC:
 
 	jsr _ppu_off
 
-	ldx #<music_data
-	ldy #>music_data
-	lda <NTSC_MODE
-	jsr FamiToneInit
-
-.if(FT_SFX_ENABLE)
-	ldx #<sounds_data
-	ldy #>sounds_data
-	jsr FamiToneSfxInit
-.endif
-
 	lda #$fd
 	sta <RAND_SEED
 	sta <RAND_SEED+1
@@ -241,21 +230,8 @@ detectNTSC:
 
 	.include "neslib.sinc"
 
-.segment "RODATA"
-
-music_data:
-;	.include "music.sinc"
-
-.if(FT_SFX_ENABLE)
-sounds_data:
-;	.include "sounds.sinc"
-.endif
-
 .segment "SAMPLES"
-
-.if(FT_DPCM_ENABLE)
-	.incbin "music_dpcm.bin"
-.endif
+	;;
 
 .segment "VECTORS"
 
