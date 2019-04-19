@@ -117,11 +117,11 @@ nmi:
 	inc <FRAME_CNT2
 	lda <FRAME_CNT2
 	cmp #6
-	bne @skipNtsc
+	bne skipNtsc
 	lda #0
 	sta <FRAME_CNT2
 
-@skipNtsc:
+skipNtsc:
 
 	jsr NMICallback
 
@@ -130,10 +130,17 @@ nmi:
 	pla
 	tax
 	pla
+	rti
 
+; IRQ: jumps to NMICallback, passing -1 as argument
 irq:
-
-    rti
+	pha
+	txa
+	pha
+	tya
+	pha
+	lda #$ff
+	jmp skipNtsc
 
 ;void __fastcall__ nmi_set_callback(void (*callback)());
 
