@@ -85,10 +85,6 @@ RLE_HIGH		=TEMP+1
 RLE_TAG			=TEMP+2
 RLE_BYTE		=TEMP+3
 
-; For extra X/Y split data.
-;WRITE1:            .res 1
-;WRITE2:            .res 2
-
 .segment "HEADER"
 
     .byte $4e,$45,$53,$1a
