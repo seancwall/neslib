@@ -4,6 +4,7 @@
 ;void __fastcall__ oam_clear_fast(void);
 
 .export _oam_clear_fast		;make this function accessible to C code
+.export _oam_off		;this byte too
 
 _oam_clear_fast:
 
