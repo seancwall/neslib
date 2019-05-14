@@ -8,6 +8,6 @@ Credit for making this goes to Shiru, who published the original in public domai
 
 @clbr made some changes and fixed some things.
 
-@sehugg made some more changes to integrate with [8bitworkshop](http://8bitworkshop.com/).
+@sehugg made some more changes to integrate with http://8bitworkshop.com/
 
 This is under the zlib license.
