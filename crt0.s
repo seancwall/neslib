@@ -14,33 +14,13 @@
 	.import NES_MAPPER,NES_PRG_BANKS,NES_CHR_BANKS,NES_MIRRORING
 
 	.include "zeropage.inc"
-
+	.include "nes.inc"
 
 FT_BASE_ADR		=$0100	;page in RAM, should be $xx00
 
 .define FT_THREAD       1	;undefine if you call sound effects in the same thread as sound update
 .define FT_PAL_SUPPORT	1   ;undefine to exclude PAL support
 .define FT_NTSC_SUPPORT	1   ;undefine to exclude NTSC support
-
-
-PPU_CTRL	=$2000
-PPU_MASK	=$2001
-PPU_STATUS	=$2002
-PPU_OAM_ADDR	=$2003
-PPU_OAM_DATA	=$2004
-PPU_SCROLL	=$2005
-PPU_ADDR	=$2006
-PPU_DATA	=$2007
-PPU_OAM_DMA	=$4014
-PPU_FRAMECNT	=$4017
-DMC_FREQ	=$4010
-CTRL_PORT1	=$4016
-CTRL_PORT2	=$4017
-
-OAM_BUF		=$0200
-PAL_BUF		=$01c0
-
-
 
 .segment "ZEROPAGE"
 
@@ -57,33 +37,18 @@ SCROLL_X: 		.res 1
 SCROLL_Y: 		.res 1
 SCROLL_X1: 		.res 1
 SCROLL_Y1: 		.res 1
-PAD_STATE: 		.res 2		;one byte per controller
-PAD_STATEP: 		.res 2
-PAD_STATET: 		.res 2
 PPU_CTRL_VAR:		.res 1
 PPU_CTRL_VAR1:		.res 1
 PPU_MASK_VAR: 		.res 1
-RAND_SEED: 		.res 2
 ;;FT_TEMP: 		.res 3
 _oam_off:		.res 1
 NMICallback:		.res 3
 
 TEMP: 			.res 11
 
-PAD_BUF			=TEMP+1
+.export	TEMP, PPU_CTRL_VAR, PPU_CTRL_VAR1, SCROLL_X1, SCROLL_Y1, _oam_off
 
-PTR			=TEMP	;word
-LEN			=TEMP+2	;word
-NEXTSPR			=TEMP+4
-SCRX			=TEMP+5
-SCRY			=TEMP+6
-SRC			=TEMP+7	;word
-DST			=TEMP+9	;word
-
-RLE_LOW			=TEMP
-RLE_HIGH		=TEMP+1
-RLE_TAG			=TEMP+2
-RLE_BYTE		=TEMP+3
+.include "zpvars.inc"
 
 .segment "HEADER"
 
@@ -214,18 +179,12 @@ detectNTSC:
 
 	jsr _ppu_off
 
-	lda #$fd
-	sta <RAND_SEED
-	sta <RAND_SEED+1
-
 	lda #0
 	sta PPU_SCROLL
 	sta PPU_SCROLL
 	sta PPU_OAM_ADDR
 
 	jmp _main			;no parameters
-
-	.include "display.sinc"
 
 	.include "neslib.sinc"
 
