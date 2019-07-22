@@ -5,6 +5,7 @@ RAND_SEED: 		.res 2
 
 .segment "CODE"
 .export _rand8,_rand16,_set_rand
+.exportzp RAND_SEED
 
 ;unsigned char __fastcall__ rand8(void);
 ;Galois random generator, found somewhere

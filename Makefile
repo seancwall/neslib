@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 CC65DIR=$(HOME)
-#CC65DIR=/data/data/com.termux/files/home/cc65-master
+#CC65DIR=/data/data/com.termux/files/home/6502/cc65-master
 
 all: crt0.o neslib2.lib
 	cp crt0.o neslib2.lib ~/8bitworkshop/src/worker/lib/nes/

@@ -46,7 +46,13 @@ NMICallback:		.res 3
 
 TEMP: 			.res 11
 
-.export	TEMP, PPU_CTRL_VAR, PPU_CTRL_VAR1, SCROLL_X1, SCROLL_Y1, _oam_off
+.exportzp NTSC_MODE, FRAME_CNT1, FRAME_CNT2, VRAM_UPDATE
+.exportzp NAME_UPD_ADR, NAME_UPD_ENABLE
+.exportzp PAL_UPDATE, PAL_BG_PTR, PAL_SPR_PTR
+.exportzp SCROLL_X, SCROLL_Y, SCROLL_X1, SCROLL_Y1
+.exportzp PPU_CTRL_VAR, PPU_CTRL_VAR1, PPU_MASK_VAR
+.exportzp _oam_off, NMICallback
+.exportzp TEMP
 
 .include "zpvars.inc"
 
