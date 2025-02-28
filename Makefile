@@ -1,9 +1,28 @@
 .PHONY: all clean
 
-all: crt0.o
+NAME = {output name}.nes
 
-crt0.o: $(wildcard *.s *.sinc)
-	cl65 -t nes -Oisr -c crt0.s
+CFLAGS = -C nes.cfg -t nes -Oisr
+CC = cl65
+
+SRC = $(wildcard *.c)
+SRC += $(wildcard *.s)
+
+OBJ = $(SRC:.c=.o)
+OBJ := $(OBJ:.s=.o)
+
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+%.o: %.s
+	$(CC) -c $(CFLAGS) $< -o $@
+
+all: $(NAME)
+
+$(NAME): $(OBJ)
+	$(CC) -o $(NAME) $(CFLAGS) $(OBJ)
+
+$(OBJ): $(wildcard *.h *.sinc)
 
 clean:
-	rm -f *.o
+	rm -f $(NAME) *.o
